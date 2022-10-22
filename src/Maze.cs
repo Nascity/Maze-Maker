@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
+using System.Threading.Tasks;
 
 namespace MazeMaker
 {
 	internal class Maze
 	{
+		#region vars
 		private Tile[,] maze;
 
 		private int width;
@@ -13,31 +15,36 @@ namespace MazeMaker
 		private int init_y;
 
 		private Stack<Point> TileCoordHistory;
+		#endregion
 
+		#region constructor
 		public Maze(int width = 9, int height = 9)
 		{
-			var rand = new Random();
-
 			this.width = (width / 2) * 2 + 1;
 			this.height = (height / 2) * 2 + 1;
+
+			MinimumWidthAndHeight();
 
 			maze = new Tile[this.height * 2, this.width * 2];
 			TileCoordHistory = new Stack<Point>();
 
-			init_x = (rand.Next(this.width - 1) / 2) * 2 + 1;
-			init_y = (rand.Next(this.height - 1) / 2) * 2 + 1;
+			InitializePrimaryCoord();
 		}
+		#endregion
 
+		#region indexer
 		public Tile this[int i1, int i2]
 		{
 			get { return maze[i1, i2]; }
 			set { maze[i1, i2] = value; }
 		}
+		#endregion
 
+		#region public method
 		public Maze Generate()
 		{
-			this[1, 1] = Tile.path;
-			TileCoordHistory.Push(new Point(1, 1));
+			this[init_x, init_y] = Tile.path;
+			TileCoordHistory.Push(new Point(init_x, init_y));
 
 			while (TileCoordHistory.Count > 0)
 			{
@@ -59,6 +66,27 @@ namespace MazeMaker
 			this[startend.Item2.Y, startend.Item2.X] = Tile.path;
 
 			return this;
+		}
+
+		public Tile[,] GetMazeArray()
+		{
+			return maze;
+		}
+		#endregion
+
+		#region private method
+		private void MinimumWidthAndHeight()
+		{
+			if (width < 5) width = 5;
+			if (height < 5) height = 5;
+		}
+
+		private void InitializePrimaryCoord()
+		{
+			var mask = new Random().Next(4);
+
+			init_x = (mask & 0b10) >> 1 == 0 ? 1 : width - 2;
+			init_y = (mask & 0b01) == 0 ? 1 : height - 2;
 		}
 
 		private Direction ChooseDirection()
@@ -149,7 +177,9 @@ namespace MazeMaker
 					TileCoordHistory.Pop();
 			}
 		}
+		#endregion
 
+		#region overrides
 		public override string ToString()
 		{
 			string ret = "";
@@ -166,5 +196,6 @@ namespace MazeMaker
 
 			return ret;
 		}
+		#endregion
 	}
 }
