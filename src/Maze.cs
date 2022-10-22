@@ -25,7 +25,7 @@ namespace MazeMaker
 
 			MinimumWidthAndHeight();
 
-			maze = new Tile[this.height * 2, this.width * 2];
+			maze = new Tile[this.height, this.width];
 			TileCoordHistory = new Stack<Point>();
 
 			InitializePrimaryCoord();
@@ -43,7 +43,7 @@ namespace MazeMaker
 		#region public method
 		public Maze Generate()
 		{
-			this[init_x, init_y] = Tile.path;
+			this[init_y, init_x] = Tile.path;
 			TileCoordHistory.Push(new Point(init_x, init_y));
 
 			while (TileCoordHistory.Count > 0)
