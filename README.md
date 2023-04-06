@@ -16,7 +16,7 @@ var maze_default_width_height = new Maze();
 var maze_default_width = new Maze(height: 15);
 
 // passing desired width and height
-var maze_custome_value = new Maze(25, 25);
+var maze_custom_value = new Maze(25, 25);
 ```
 
 Maze can have desired dimension.
